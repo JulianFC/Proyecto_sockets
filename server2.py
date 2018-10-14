@@ -22,22 +22,31 @@ serverSocket.bind((HOST, PORT))
 serverSocket.listen(4) # Listen ONLY ONE clients
 print 'Client connected to %s:%s' % (HOST, PORT)
 sockets = [serverSocket]
-
+usernames = ["Server"]
 while True:
     ready_to_read, ready_to_write, _ = select.select(sockets, [], [])
     for sock in ready_to_read:
         if sock == serverSocket:
             sclient, addr = serverSocket.accept()  # Acepting client
             sockets.append(sclient)
-            print "[SERVER] Client %s connected!" % str(sclient.getpeername())
+            username = sclient.recv(MSG_BUFFER)
+            usernames.append(username)
+            print "[SERVER] Client "+username+" connected!"
 
         else:
             msg = sock.recv(MSG_BUFFER)
+            username = usernames[sockets.index(sock)]
             if msg:
-                print('<' + str(sock.getpeername()) + '>: ' + msg)
+                print '<' + username + '>: ' + msg
                 if msg == ':smile':
                     print('[SERVER] :)')
+                if msg == ":q":
+                    usernames.remove(username)
+                    sockets.remove(sock)
+
+
             # disconnected
             else:
-                print('<' + str(sock.getpeername()) + '>: disconnected :c')
+                print('<' + username + '>: disconnected :c')
+                usernames.remove(username)
                 sockets.remove(sock)
