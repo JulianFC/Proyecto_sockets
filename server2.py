@@ -37,12 +37,17 @@ while True:
             msg = sock.recv(MSG_BUFFER)
             username = usernames[sockets.index(sock)]
             if msg:
-                print '<' + username + '>: ' + msg
-                if msg == ':smile':
-                    print('[SERVER] :)')
                 if msg == ":q":
                     usernames.remove(username)
                     sockets.remove(sock)
+                    print('<' + username + '>: disconnected :c')
+                elif msg == ":i":
+                    print "There is "+str(len(usernames)-1)+" connected users:"
+                    for user in usernames:
+                        if user != "Server":
+                            print user
+                else:
+                    print '<' + username + '>: ' + msg
 
 
             # disconnected

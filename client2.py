@@ -27,12 +27,10 @@ SOCKET_LIST.append(sys.stdin) # standard input.
 SOCKET_LIST.append(clientSocket)
 
 print 'Welcome to the Best Chat in the World'
-
 connected = True
-
+message = raw_input('You: ')
 while connected:
     ready_to_read, _, _ = select.select(SOCKET_LIST, [], [])
-    message = raw_input("You: ")
     for sock in ready_to_read:
         if sock == clientSocket:
             msg = sock.recv(MSG_BUFFER)
@@ -42,4 +40,13 @@ while connected:
         if message == ":q":
             connected = False
             clientSocket.close()
+        if message == ":h":
+            print "\nList of commands:"
+            print ":h, lists the available commands."
+            print ":q, disconnects from the server."
+            print ":i, lists the connected users."
+            print ":add, shows the intern chat identifier."
+            print ":p-name-msg, sends a private message 'msg' to the user 'name'"
+
+    message = raw_input('You: ')
 
