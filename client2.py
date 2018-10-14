@@ -45,7 +45,7 @@ while connected:
         if message == ":h":
             print('\nComandos Disponibles:\n (:q) Salir del Chat. \n' +
                   ' (:i) Mostrar en Servidor: Todos los Nicknames y Total Conectados \n' +
-                  ' (:add) Muestrar Identificador Interno. \n' +
+                  ' (:add) Mostrar Identificador Interno. \n' +
                   ' (:p-name-msg) Envia Mensaje Privado "msg" a "name". \n[Press Enter]')
 
         if message == ":q":
