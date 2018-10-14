@@ -1,7 +1,7 @@
 import sys
 import socket
 import select
-# comentario.
+
 MSG_BUFFER = 1024
 
 clientSocket = socket.socket()
@@ -26,20 +26,29 @@ SOCKET_LIST = []
 SOCKET_LIST.append(sys.stdin) # standard input.
 SOCKET_LIST.append(clientSocket)
 
-print 'Welcome to the Best Chat in the World'
+
+print 'Welcome to the Best Chat in the World \n[Press Enter]'
 
 connected = True
 
 while connected:
     ready_to_read, _, _ = select.select(SOCKET_LIST, [], [])
     message = raw_input("You: ")
+
     for sock in ready_to_read:
         if sock == clientSocket:
             msg = sock.recv(MSG_BUFFER)
             print(msg)
 
         clientSocket.send(message)
+
+        if message == ":h":
+            print('\nComandos Disponibles:\n (:q) Salir del Chat. \n' +
+                  ' (:i) Mostrar en Servidor: Todos los Nicknames y Total Conectados \n' +
+                  ' (:add) Muestrar Identificador Interno. \n' +
+                  ' (:p-name-msg) Envia Mensaje Privado "msg" a "name". \n[Press Enter]')
+
         if message == ":q":
             connected = False
+            print('Have Disconnected.')
             clientSocket.close()
-
