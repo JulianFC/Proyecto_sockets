@@ -1,7 +1,7 @@
 import sys
 import socket
 import select
-
+# comentario.
 MSG_BUFFER = 1024
 
 clientSocket = socket.socket()
