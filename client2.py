@@ -44,7 +44,7 @@ while connected:
 
         if message == ":h":
             print('\nComandos Disponibles:\n (:q) Salir del Chat. \n' +
-                  ' (:i) Mostrar en Servidor: Todos los Nicknames y Total Conectados \n' +
+                  ' (:i) Mostrar en Servidor a Todos los Usuarios.\n' +
                   ' (:add) Mostrar Identificador Interno. \n' +
                   ' (:p-name-msg) Envia Mensaje Privado "msg" a "name". \n[Press Enter]')
 
@@ -52,3 +52,4 @@ while connected:
             connected = False
             print('Have Disconnected.')
             clientSocket.close()
+
