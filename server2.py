@@ -23,6 +23,7 @@ serverSocket.listen(4) # Listen ONLY ONE clients
 print 'Client connected to %s:%s' % (HOST, PORT)
 sockets = [serverSocket]
 usernames = ["Server"]
+
 while True:
     ready_to_read, ready_to_write, _ = select.select(sockets, [], [])
     for sock in ready_to_read:
@@ -31,27 +32,31 @@ while True:
             sockets.append(sclient)
             username = sclient.recv(MSG_BUFFER)
             usernames.append(username)
-            print "[SERVER] Client "+username+" connected!"
+            print "[SERVER]: Client <" + username + "> Connected"
 
         else:
             msg = sock.recv(MSG_BUFFER)
             username = usernames[sockets.index(sock)]
             if msg:
                 if msg == ":q":
+                    print('[SERVER]: Client <' + username + '> Disconnected')
                     usernames.remove(username)
                     sockets.remove(sock)
-                    print('<' + username + '>: disconnected :c')
                 elif msg == ":i":
-                    print "There is "+str(len(usernames)-1)+" connected users:"
-                    for user in usernames:
-                        if user != "Server":
-                            print user
+                        print('[SERVER]: Client <' + username + '> Solcita Usuarios Conectados.')
+                        for i in range(1, len(usernames)):
+                            print('[' + str(i) + '] ' + usernames[i])
                 else:
-                    print '<' + username + '>: ' + msg
-
+                    print '[' + username + ']: ' + msg
+                    if msg == ':smile':
+                        print('[SERVER]: :)')
+                    if msg == ":i":
+                        print('[SERVER]: Client <' + username + '> Disconnected')
+                        usernames.remove(username)
+                        sockets.remove(sock)
 
             # disconnected
             else:
-                print('<' + username + '>: disconnected :c')
+                print('[SERVER]: Client <' + username + '> Disconnected')
                 usernames.remove(username)
                 sockets.remove(sock)
