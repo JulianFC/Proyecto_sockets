@@ -14,8 +14,7 @@ try:
 except:
     port = 8889
 
-print "Write Username"
-username = raw_input()
+username = raw_input("Write Username: ")
 
 # Connecting
 clientSocket.connect((host, port))
@@ -27,13 +26,17 @@ SOCKET_LIST.append(sys.stdin) # standard input.
 SOCKET_LIST.append(clientSocket)
 
 
-print 'Welcome to the Best Chat in the World \n[Press Enter]'
+print 'Welcome to the Best Chat in the World \n'
 
 connected = True
 
+
 while connected:
+
+    print 'You: ',
     ready_to_read, _, _ = select.select(SOCKET_LIST, [], [])
-    message = raw_input("You: ")
+
+    message = raw_input('\r')
 
     for sock in ready_to_read:
         if sock == clientSocket:
@@ -43,13 +46,13 @@ while connected:
         clientSocket.send(message)
 
         if message == ":h":
-            print('\nComandos Disponibles:\n (:q) Salir del Chat. \n' +
+            print('\r \nComandos Disponibles:\n (:q) Salir del Chat. \n' +
                   ' (:i) Mostrar en Servidor a Todos los Usuarios.\n' +
                   ' (:add) Mostrar Identificador Interno. \n' +
-                  ' (:p-name-msg) Envia Mensaje Privado "msg" a "name". \n[Press Enter]')
+                  ' (:p-name-msg) Envia Mensaje Privado "msg" a "name". \n')
 
         if message == ":q":
             connected = False
-            print('Have Disconnected.')
+            print('\rYou Have Disconnected.')
             clientSocket.close()
 
