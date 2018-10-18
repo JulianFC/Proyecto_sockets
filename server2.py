@@ -46,17 +46,21 @@ while True:
                         print('[SERVER]: Client <' + username + '> Solcita Usuarios Conectados.')
                         for i in range(1, len(usernames)):
                             print('[' + str(i) + '] ' + usernames[i])
+
+                if msg == ":h" or msg == ":q" or msg == ":i":
+                    pass
+
                 else:
                     print '[' + username + ']: ' + msg
                     if msg == ':smile':
                         print('[SERVER]: :)')
-                    if msg == ":i":
+                    if msg == ":q":
                         print('[SERVER]: Client <' + username + '> Disconnected')
                         usernames.remove(username)
                         sockets.remove(sock)
 
             # disconnected
-            else:
-                print('[SERVER]: Client <' + username + '> Disconnected')
-                usernames.remove(username)
-                sockets.remove(sock)
+            # else:
+                # print('[SERVER]: Client <' + username + '> Disconnected')
+                # usernames.remove(username)
+                # sockets.remove(sock)
