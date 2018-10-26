@@ -19,7 +19,7 @@ except:
 # and STREAM SOCKET Type.
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serverSocket.bind((HOST, PORT))
-serverSocket.listen(4) # Listen ONLY ONE clients
+serverSocket.listen(8) # Listen ONLY ONE clients
 print 'Cliente conectado a %s:%s' % (HOST, PORT)
 
 sockets = [serverSocket] #list of connected sockets
