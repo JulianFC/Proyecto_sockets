@@ -70,7 +70,7 @@ while True:
                         if target in usernames: #check user available
                             message = msg[separators[1]+1:]
                             print('[SERVER]: Cliente <' + username + '> envia mensaja privado a <' + target + '>')
-                            sockets[usernames.index(target)].send("[" + username + "]: " + message) #send message
+                            sockets[usernames.index(target)].send("[" + username + "]: " + message+"\n") #send message
 
 
                 elif msg == ":h" or msg == ":q" or msg == ":i" or msg == ":add":
