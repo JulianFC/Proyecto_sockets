@@ -13,62 +13,72 @@ except:
 try:
     PORT = int(sys.argv[2])
 except:
-    PORT = 8880
+    PORT = 8889
 
 # Creating the client socket. AF_INET IP Family (v4)
 # and STREAM SOCKET Type.
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serverSocket.bind((HOST, PORT))
 serverSocket.listen(4) # Listen ONLY ONE clients
-print 'Client connected to %s:%s' % (HOST, PORT)
-sockets = [serverSocket]
-usernames = ["Server"]
+print 'Cliente conectado a %s:%s' % (HOST, PORT)
 
+sockets = [serverSocket] #list of connected sockets
+usernames = ["Server"] #list of connected usernames (in the same order as sockets)
+
+
+#Have the server always on
 while True:
     ready_to_read, ready_to_write, _ = select.select(sockets, sockets, [])
-    for sock in ready_to_write:
-        print ready_to_write.index(sock)
-    for sock in ready_to_read:
+    for sock in ready_to_read: #for every sock sendig a message
         if sock == serverSocket:
             sclient, addr = serverSocket.accept()  # Acepting client
-            sockets.append(sclient)
-            username = sclient.recv(MSG_BUFFER)
+            sockets.append(sclient) #add to the list
+            username = sclient.recv(MSG_BUFFER) #get username
 
-            if username in usernames:
-                sclient.send("wait")
-                sockets.remove(sclient)
+            if username in usernames: #user already occupied
+                sclient.send("wait") #send message to pick another message
+                sockets.remove(sclient) #remove from list
             else:
-                sclient.send("ok")
-                usernames.append(username)
-                print "[SERVER]: Client <" + username + "> Connected"
+                sclient.send("ok") #user available
+                usernames.append(username) #add to list
+                print "[SERVER]: Cliente <" + username + "> conectado."
 
         else:
-            msg = sock.recv(MSG_BUFFER)
+            msg = sock.recv(MSG_BUFFER) #message received
             username = usernames[sockets.index(sock)]
             if msg:
-                if msg == ":q":
-                    print('[SERVER]: Client <' + username + '> Disconnected')
+                if msg == ":q": #disconnect user
+                    print('[SERVER]: Cliente <' + username + '> se ha desconectado.')
                     usernames.remove(username)
                     sockets.remove(sock)
-                elif msg == ":i":
-                        print('[SERVER]: Client <' + username + '> Solicita Usuarios Conectados.')
+                elif msg == ":i": #print list of connected users
+                        print('[SERVER]: Cliente <' + username + '> solicita Usuarios Conectados.')
                         for i in range(1, len(usernames)):
                             print('[' + str(i) + '] ' + usernames[i])
 
-                elif msg == ":add":
-                    address, _ = sock.getpeername()
-                    sock.send(address)
+                elif msg == ":add": #send addres (the client prints it)
+                    address = sock.getpeername()
+                    sock.send("\nIdentificador Interno: " + address[0]+ " \nPuerto: "+ str(address[1]))
 
-                elif msg[0:3] == ":p-":
-                    msg = msg.split("-")
-                    if msg[1] in usernames and len(msg) >= 3:
-                        print('[SERVER]: Client <' + username + '> Sent Private Message to <' + msg[1] + '>')
-                        sockets[usernames.index(msg[1])].send(msg[2])
+                elif msg[0:3] == ":p-": #send private message as ":p-username-message"
+                    separators = []
+                    for i in range(len(msg)):
+                        if msg[i] == "-":
+                            separators.append(i) #detect "-"
+                    if len(separators) >= 2: #check correct format
+                        target = msg[separators[0]+1:separators[1]] #user to send the message
+                        if target in usernames: #check user available
+                            message = msg[separators[1]+1:]
+                            print('[SERVER]: Cliente <' + username + '> envia mensaja privado a <' + target + '>')
+                            sockets[usernames.index(target)].send("[" + username + "]: " + message) #send message
+
 
                 elif msg == ":h" or msg == ":q" or msg == ":i" or msg == ":add":
                     pass
 
                 else:
                     print '[' + username + ']: ' + msg
-                    if msg == ':smile':
-                        print('[SERVER]: :)')
+            else:
+                print('[SERVER]: Cliente <' + username + '> se ha desconectado.')
+                usernames.remove(username)
+                sockets.remove(sock)
